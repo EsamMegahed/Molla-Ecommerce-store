@@ -1,0 +1,45 @@
+{% extends 'shop/mine.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% block content %}
+
+
+<div class="container">
+    <div class="form-box" style="margin-top: 50px;margin-bottom: 50px;">
+        <form enctype="multipart/form-data" method="POST" class="profile">
+            <div class="widget-title" style="margin: auto; width: 60%;">
+                <h3>Profile Information</h3>
+            </div>
+            <div>
+                <ul class="widget-list profile-ui">
+                    <li class="megamenu-container " style="margin: auto; width: 300px;"><img src="{{image}}" alt=""
+                            style="width: 300px;height: 300px; border-radius: 50%;"> </li>
+                    <li class="megamenu-container profile-li">Name :
+                        <span class="profile-span">{{profile.user.username}} </span>
+                    </li>
+                    <li class="megamenu-container profile-li">Email : <span
+                            class="profile-span">{{profile.user.email}}</span></li>
+                    <li class="megamenu-container profile-li">First Name : <span
+                            class="profile-span">{{profile.user.first_name}}</span></li>
+                    <li class="megamenu-container profile-li">Last Name : <span
+                            class="profile-span">{{profile.user.last_name}}</span></li>
+                    <li class="megamenu-container profile-li">City : <span class="profile-span">{{profile.city}}</span>
+                    </li>
+                    <li class="megamenu-container profile-li">Phone Number : <span
+                            class="profile-span">{{profile.phone_number}}</span></li>
+                </ul>
+        </form>
+    </div>
+    <div style="margin-top: 30px;">
+        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-outline-primary-2" style="width: 100%;">Edit
+            Profile</a>
+    </div>
+    <div style="margin-top: 30px;">
+        <a href="{% url 'password_change' %}" class="btn btn-outline-primary-2" style="width: 100%;">Change
+            Password</a>
+    </div>
+</div>
+
+</div>
+
+{% endblock content %}

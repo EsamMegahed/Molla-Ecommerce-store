@@ -1,0 +1,37 @@
+{% extends 'shop/mine.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-header text-center" style="background-image: url('{{ STATIC_URL }}/images/page-header-bg.jpg')">
+    <div class="container">
+        <h1 class="page-title">Contact <span>Form</span></h1>
+    </div><!-- End .container -->
+</div><!-- End .page-header -->
+
+<div class="container">
+    <div class="form-box" style="margin-top: 50px;margin-bottom: 50px;">
+        <form action="#" method="POST">
+            <div class="row">
+                {% csrf_token %}
+                <label>Subject</label>
+                <input type="text" class="form-control" placeholder="Subject" name="subject" required>
+
+                <label>Email address</label>
+                <input type="email" class="form-control" placeholder="Make Sure Your Email Is Vaild" name="email"
+                    required>
+
+                <label>Message</label>
+                <textarea class="form-control" name="message" placeholder="Type Your Message Here"></textarea required>
+
+
+                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                    <span class="btn-text">Get In Touch</span>
+                    <span class="btn-hover-text">Send A Message</span>
+                </button>
+            </div><!-- End .row -->
+        </form>
+    </div>
+
+</div>
+
+{% endblock content %}

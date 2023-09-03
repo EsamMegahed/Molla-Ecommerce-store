@@ -1,0 +1,18 @@
+{% extends 'shop/mine.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="form-box" style="margin-top: 50px;margin-bottom: 50px; text-align: center;">
+        <span>Check Your Mail Now</span>
+        <a href="{% url 'store' %}">
+            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block" style="margin-top: 30px;">
+                <span class="btn-text">Back To Store</span>
+                <span class="btn-hover-text">Continue Shopping</span>
+            </button>
+        </a>
+    </div>
+
+</div>
+
+{% endblock content %}

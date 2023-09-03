@@ -1,0 +1,151 @@
+{% extends 'shop/mine.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block content %}
+
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('{{ STATIC_URL }}/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Checkout<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="checkout">
+            <div class="container">
+                <form id="form" method="POST" name="form">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                            {% bootstrap_form form %}
+                        </div><!-- End .col-lg-9 -->
+                        <aside class="col-lg-3">
+                            <div class="summary">
+                                <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                                <table class="table table-summary">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for item in items %}
+                                        <tr>
+                                            <td><a href="#">{{item.product.name}}</a></td>
+                                            <td>
+                                                ${{item.product.price}}
+                                                <span style="float:right;padding-left: 10px;">X{{item.quantity}}</span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+
+                                        <tr class="summary-total">
+                                            <td>Items :</td>
+                                            <td>{{order.get_cart_items}}</td>
+                                        </tr><!-- End .summary-total -->
+                                        <tr class="summary-total">
+                                            <td>Total :</td>
+                                            <td>${{order.get_cart_total}}</td>
+                                        </tr><!-- End .summary-total -->
+                                    </tbody>
+                                </table><!-- End .table table-summary -->
+                                <a href="{% url 'store' %}" class="btn btn-outline-primary-2 btn-order btn-block">
+                                    <span class="btn-text">CONTINUE
+                                        SHOPPING <i class="icon-refresh"></i></span>
+                                    <span class="btn-hover-text">Back To Shop</span>
+                                </a>
+
+
+                                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                    <span class="btn-text">Place Order</span>
+                                    <span class="btn-hover-text">Proceed to Checkout</span>
+                                </button>
+                            </div><!-- End .summary -->
+                        </aside><!-- End .col-lg-3 -->
+                    </div><!-- End .row -->
+                </form>
+            </div><!-- End .container -->
+        </div><!-- End .checkout -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+<script type="text/javascript">
+
+
+    var shipping = '{{order.shipping}}'
+
+    var total = '{{order.get_cart_total|floatformat:2}}'
+
+    var form = document.getElementById('form')
+
+    document.getElementById('make-payment').addEventListener('click', function (e) {
+        submitFormData()
+    })
+
+    function submitFormData() {
+        console.log('payment button clicked')
+        var userFormData = {
+            'firstName': null,
+            'lastName': null,
+            'email': null,
+            'phone': null,
+            'total': total,
+
+        }
+        var shippingInfo = {
+            'postcode': null,
+            'country': null,
+            'state': null,
+            'town': null,
+            'streetAddress1': null,
+            'streetAddress2': null,
+            'textarea': null,
+        }
+
+        if (shipping != 'False') {
+            shippingInfo.postcode = form.postcode.value
+            shippingInfo.state = form.state.value
+            shippingInfo.country = form.country.value
+            shippingInfo.town = form.town.value
+            shippingInfo.streetAddress1 = form.streetAddress1.value
+            shippingInfo.streetAddress2 = form.streetAddress2.value
+            shippingInfo.textarea = form.textarea.value
+
+        }
+        var url = '/process_order/'
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'contant-type': 'application/json',
+                'X-CSRFToken': csrftoken,
+
+            },
+            body: JSON.stringify({ 'form': userFormData, 'shipping': shippingInfo })
+
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('success', data);
+                alert('Transaction Complete')
+                window.location.href = "{% url 'store' %}"
+            })
+
+    }
+
+</script>
+
+{% endblock content %}

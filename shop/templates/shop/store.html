@@ -1,0 +1,161 @@
+{% extends 'shop/mine.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% block content %}
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('{{ STATIC_URL }}/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">List<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">List</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+
+                    {% for product in products %}
+                    <div class="products mb-3">
+                        <div class="product product-list">
+                            <div class="row">
+                                <div class="col-6 col-lg-3">
+                                    <figure class="product-media">
+                                        <span class="product-label label-new">New</span>
+                                        <a href="{% url 'product_details' product.slug %}">
+                                            <img src="{{product.imageURL}}" alt="Product image" class="product-image">
+                                        </a>
+                                    </figure><!-- End .product-media -->
+                                </div><!-- End .col-sm-6 col-lg-3 -->
+
+                                <div class="col-6 col-lg-3 order-lg-last">
+                                    <div class="product-list-action">
+                                        <div class="product-price">
+                                            ${{product.price|floatformat:2}}
+                                        </div><!-- End .product-price -->
+
+
+                                        <div class="product-action">
+                                            <a href="{% url 'product_details' product.slug %}" class="btn-product"
+                                                title="Quick view" style="margin:auto;"><span>Quick
+                                                    view <i class="fa fa-eye" aria-hidden="true"
+                                                        style="font-size: 15px;"></i></span></a>
+
+                                        </div><!-- End .product-action -->
+                                        {% if request.user.is_authenticated %}
+                                        <button data-product={{product.id}} data-action='add'
+                                            class="btn-product btn-cart update-cart"
+                                            style="width:100%; margin-top: 20px;"><span>add to cart</span></button>
+                                        {% else %}
+                                        <a href="{% url 'login' %}" class="btn-product btn-cart"
+                                            style="width:100%; margin-top: 20px;"><span>Log
+                                                In To Add To
+                                                Cart</span></a>
+                                        {% endif %}
+                                    </div><!-- End .product-list-action -->
+                                </div><!-- End .col-sm-6 col-lg-3 -->
+
+                                <div class="col-lg-6">
+                                    <div class="product-body product-action-inner">
+                                        {% if product.id in PIW %}
+
+                                        <div class="btn-product" style="display: inline;">
+                                            <i class="fa fa-heart"
+                                                style="font-size:20px;color:#c96;padding-left: 90%;"></i>
+                                        </div>
+
+                                        {% else %}
+
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="prouduct-id" value="{{product.id}}">
+                                            <button type="submit" title="Add to wishlist"
+                                                class="btn-product btn-wishlist" style="border: none;"></button>
+                                        </form>
+                                        {% endif %}
+
+                                        <div class="product-cat">
+                                            <a href="{% url 'product_details' product.slug %}">
+                                                {{product.name}}
+                                            </a>
+                                        </div><!-- End .product-cat -->
+
+                                        <div class="product-content">
+                                            <p>{{product.descriptions}}</p>
+                                        </div><!-- End .product-content -->
+
+                                    </div><!-- End .product-body -->
+                                </div><!-- End .col-lg-6 -->
+                            </div><!-- End .row -->
+                        </div><!-- End .product -->
+
+                    </div><!-- End .products -->
+                    {% endfor %}
+                    {% if products.has_other_pages %}
+                    <nav aria-label="Page navigation" style="margin-left: auto;
+                    margin-right: auto">
+                        <ul class="pagination">
+                            {% if products.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link page-link-prev" href="?page={{products.previous_page_number}}"
+                                    aria-label="Previous" tabindex="-1" aria-disabled="true">
+                                    <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for i in products.paginator.page_range %}
+
+                            <li class="page-item " aria-current="page"><a class="page-link page-number"
+                                    href="?page={{i}}">{{i}}</a>
+                            </li>
+                            {% endfor %}
+                            <li class="page-item-total">of {{page_len}}</li>
+
+                            {% if products.has_next %}
+                            <li class="page-item">
+                                <a class="page-link page-link-next" href="?page={{products.next_page_number}}"
+                                    aria-label="Next">
+                                    Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div><!-- End .col-lg-9 -->
+                <aside class="col-lg-3 order-lg-first">
+                    <div class="sidebar sidebar-shop">
+                        <div class="widget widget-clean">
+                            <label>Filters:</label>
+
+                            <a href="{% url 'store' %}">Clear filters</a>
+
+                        </div><!-- End .widget widget-clean -->
+                        <form method="GET">
+                            {% bootstrap_form myfilter.form %}
+                            <div style="width: 100%;">
+                                <span style="width: 100%;">
+                                    {% bootstrap_button button_type="submit" content="Search" %}
+
+                                </span>
+                            </div>
+                        </form>
+                    </div><!-- End .sidebar sidebar-shop -->
+                </aside><!-- End .col-lg-3 -->
+            </div><!-- End .row -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+
+</main><!-- End .main -->
+
+
+{% endblock content %}

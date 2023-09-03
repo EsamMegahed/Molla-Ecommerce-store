@@ -1,0 +1,8 @@
+{% extends 'shop/accounts_base.html' %}
+
+{% block content %}
+<h2>Logged out!</h2>
+<a href="{% url 'login'%}">Click here to login again.</a>
+<a href="{% url 'store' %}" class="btn btn-outline-primary-2 btn-order btn-block" style="margin-top: 30px;">Back To
+    Store</a>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'shop/mine.html' %}
+{% load static %}
+{% block content %}
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('{{ STATIC_URL }}/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Wishlist<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'store' %}">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="container">
+            <table class="table table-wishlist table-mobile">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for wish in my_list %}
+                    <tr>
+
+                        <td class="product-col">
+                            <div class="product">
+                                <figure class="product-media">
+                                    <a href="{% url 'product_details' wish.products.slug %}">
+                                        <img src="{{wish.products.imageURL}}" alt="Product image">
+                                    </a>
+                                </figure>
+
+                                <div class="product-cat">
+                                    <h4 class="product-title">
+                                        <a
+                                            href="{% url 'product_details' wish.products.slug %}">{{wish.products.name}}</a>
+                                    </h4>
+                                </div><!-- End .product-cat -->
+
+
+                        </td>
+                        <td class="price-col">{{wish.products.price}}$</td>
+
+                        <td class="action-col">
+                            <button data-product={{wish.products.id}} data-action='add'
+                                class="btn btn-block btn-outline-primary-2 update-cart" style="width:100%;"><span>add
+                                    to cart</span></button>
+                        </td>
+                        <td class="remove-col "><button class="btn-remove update-cart" data-product={{wish.products.id}}
+                                data-action='remove-wishlist'><i class="icon-close"></i></button></td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table><!-- End .table table-wishlist -->
+
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+{% endblock content %}

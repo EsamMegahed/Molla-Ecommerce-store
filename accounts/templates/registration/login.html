@@ -1,0 +1,31 @@
+{% extends 'shop/accounts_base.html' %}
+{% load bootstrap5 %}
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+{% if user.is_authenticated %}
+<p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+{% else %}
+<p>Please login to see this page.</p>
+{% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input class="btn btn-outline-primary-2" type="submit" value="login" style="width: 100%;">
+    <input type="hidden" name="next" value="{{ next }}">
+</form>
+
+{# Assumes you setup the password_reset view in your URLconf #}
+<p style="margin-top:15px;display: inline-block;"><a href="{% url 'password_reset' %}">Lost password?</a></p>
+<p style="margin-top:15px;display: inline-block;padding-left: 30px;">Or</p>
+<p style="margin-top:15px;display: inline-block;padding-left: 30px;"><a href="{% url 'accounts:signup' %}">Sign UP</a>
+</p>
+
+{% endblock %}
